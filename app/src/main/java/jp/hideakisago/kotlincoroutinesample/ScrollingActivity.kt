@@ -22,7 +22,7 @@ class ScrollingActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        launchTest()
+        launch.setOnClickListener { launchTest() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
