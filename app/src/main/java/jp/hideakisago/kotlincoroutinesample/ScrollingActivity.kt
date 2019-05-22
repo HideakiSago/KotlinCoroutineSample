@@ -48,16 +48,16 @@ class ScrollingActivity : AppCompatActivity() {
      *
      * 以下のような結果になります。
      * ```
-     * 2019-05-22 09:07:50.823 14121-14121 D/ScrollingActivity: before launch main
-     * 2019-05-22 09:07:50.890 14121-14121 D/ScrollingActivity: after launch main
-     * 2019-05-22 09:07:50.917 14121-14180 D/ScrollingActivity: start launch1 DefaultDispatcher-worker-1
-     * 2019-05-22 09:07:50.917 14121-14181 D/ScrollingActivity: start launch2 DefaultDispatcher-worker-2
-     * 2019-05-22 09:07:51.020 14121-14181 D/ScrollingActivity: start launch3 DefaultDispatcher-worker-2
-     * 2019-05-22 09:07:56.919 14121-14180 D/ScrollingActivity: end   launch1 DefaultDispatcher-worker-1
-     * 2019-05-22 09:07:56.921 14121-14180 D/ScrollingActivity: start launch4 DefaultDispatcher-worker-1
-     * 2019-05-22 09:07:56.985 14121-14180 D/ScrollingActivity: end   launch2 DefaultDispatcher-worker-1
-     * 2019-05-22 09:07:57.021 14121-14181 D/ScrollingActivity: end   launch3 DefaultDispatcher-worker-2
-     * 2019-05-22 09:08:02.925 14121-14181 D/ScrollingActivity: end   launch4 DefaultDispatcher-worker-2
+     * 2019-05-22 22:04:06.472 16115-16115 D/ScrollingActivity: before launch	Thread: main
+     * 2019-05-22 22:04:06.473 16115-16115 D/ScrollingActivity: after launch	Thread: main
+     * 2019-05-22 22:04:06.473 16115-16145 D/ScrollingActivity: start launch1	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:04:06.473 16115-16144 D/ScrollingActivity: start launch2	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:04:06.474 16115-16144 D/ScrollingActivity: start launch3	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:04:12.475 16115-16145 D/ScrollingActivity: end   launch1	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:04:12.475 16115-16145 D/ScrollingActivity: start launch4	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:04:12.476 16115-16145 D/ScrollingActivity: end   launch2	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:04:12.479 16115-16144 D/ScrollingActivity: end   launch3	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:04:18.484 16115-16145 D/ScrollingActivity: end   launch4	Thread: DefaultDispatcher-worker-2
      * ```
      */
     private fun launchTest() {
