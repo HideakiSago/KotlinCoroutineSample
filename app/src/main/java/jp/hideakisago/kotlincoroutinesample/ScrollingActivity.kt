@@ -50,20 +50,20 @@ class ScrollingActivity : AppCompatActivity() {
      *
      * 以下のような結果になります。
      * ```
-     * 2019-05-22 22:04:06.472 16115-16115 D/ScrollingActivity: before launch	Thread: main
-     * 2019-05-22 22:04:06.473 16115-16115 D/ScrollingActivity: after launch	Thread: main
-     * 2019-05-22 22:04:06.473 16115-16145 D/ScrollingActivity: start launch1	Thread: DefaultDispatcher-worker-2
-     * 2019-05-22 22:04:06.473 16115-16144 D/ScrollingActivity: start launch2	Thread: DefaultDispatcher-worker-1
-     * 2019-05-22 22:04:06.474 16115-16144 D/ScrollingActivity: start launch3	Thread: DefaultDispatcher-worker-1
-     * 2019-05-22 22:04:12.475 16115-16145 D/ScrollingActivity: end   launch1	Thread: DefaultDispatcher-worker-2
-     * 2019-05-22 22:04:12.475 16115-16145 D/ScrollingActivity: start launch4	Thread: DefaultDispatcher-worker-2
-     * 2019-05-22 22:04:12.476 16115-16145 D/ScrollingActivity: end   launch2	Thread: DefaultDispatcher-worker-2
-     * 2019-05-22 22:04:12.479 16115-16144 D/ScrollingActivity: end   launch3	Thread: DefaultDispatcher-worker-1
-     * 2019-05-22 22:04:18.484 16115-16145 D/ScrollingActivity: end   launch4	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:20:29.724 16750-16750 D/ScrollingActivity: start launchTest	Thread: main
+     * 2019-05-22 22:20:29.834 16750-16750 D/ScrollingActivity: end   launchTest	Thread: main
+     * 2019-05-22 22:20:29.853 16750-16822 D/ScrollingActivity: start launch1	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:20:29.856 16750-16823 D/ScrollingActivity: start launch2	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:20:29.891 16750-16823 D/ScrollingActivity: start launch3	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:20:35.854 16750-16822 D/ScrollingActivity: end   launch1	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:20:35.855 16750-16822 D/ScrollingActivity: start launch4	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:20:35.878 16750-16822 D/ScrollingActivity: end   launch2	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:20:35.892 16750-16823 D/ScrollingActivity: end   launch3	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:20:41.858 16750-16823 D/ScrollingActivity: end   launch4	Thread: DefaultDispatcher-worker-2
      * ```
      */
     private fun launchTest() {
-        log("before launch")
+        log("start launchTest")
 
         GlobalScope.launch {
             log("start launch1")
@@ -92,7 +92,7 @@ class ScrollingActivity : AppCompatActivity() {
             log("end   launch4")
         }
 
-        log("after launch")
+        log("end   launchTest")
     }
 
     /**
@@ -100,13 +100,13 @@ class ScrollingActivity : AppCompatActivity() {
      *
      * 以下のような結果になります。
      * ```
-     * 2019-05-22 22:09:50.979 16312-16312 D/ScrollingActivity: start asyncAwaitTest	Thread: main
-     * 2019-05-22 22:09:50.985 16312-16374 D/ScrollingActivity: start asyncTask	Thread: DefaultDispatcher-worker-1
-     * 2019-05-22 22:09:57.018 16312-16376 D/ScrollingActivity: end asyncTask	Thread: DefaultDispatcher-worker-1
-     * 2019-05-22 22:09:57.025 16312-16312 D/ScrollingActivity: after asyncTask before GlobalScope.async	Thread: main
-     * 2019-05-22 22:09:57.039 16312-16375 D/ScrollingActivity: start GlobalScope.async	Thread: DefaultDispatcher-worker-2
-     * 2019-05-22 22:10:03.043 16312-16379 D/ScrollingActivity: end GlobalScope.async	Thread: DefaultDispatcher-worker-2
-     * 2019-05-22 22:10:03.044 16312-16312 D/ScrollingActivity: end asyncAwaitTest	Thread: main
+     * 2019-05-22 22:21:14.503 16750-16750 D/ScrollingActivity: start asyncAwaitTest	Thread: main
+     * 2019-05-22 22:21:14.505 16750-16823 D/ScrollingActivity: start asyncTask	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:21:20.517 16750-16822 D/ScrollingActivity: end   asyncTask	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:21:20.520 16750-16750 D/ScrollingActivity: after asyncTask before GlobalScope.async	Thread: main
+     * 2019-05-22 22:21:20.521 16750-16822 D/ScrollingActivity: start GlobalScope.async	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:21:26.526 16750-16836 D/ScrollingActivity: end   GlobalScope.async	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:21:26.527 16750-16750 D/ScrollingActivity: end   asyncAwaitTest	Thread: main
      * ```
      */
     private fun asyncAwaitTest() = GlobalScope.launch(Dispatchers.Main) {
@@ -119,16 +119,16 @@ class ScrollingActivity : AppCompatActivity() {
         GlobalScope.async(Dispatchers.IO) {
             log("start GlobalScope.async")
             delay(sleepTime)
-            log("end GlobalScope.async")
+            log("end   GlobalScope.async")
             return@async 10
         }.await()
-        log("end asyncAwaitTest")
+        log("end   asyncAwaitTest")
     }
 
     private suspend fun asyncTask() = GlobalScope.async(Dispatchers.IO) {
         log("start asyncTask")
         delay(sleepTime)
-        log("end asyncTask")
+        log("end   asyncTask")
         return@async 10
     }.await()
 
