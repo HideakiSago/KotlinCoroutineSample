@@ -62,35 +62,39 @@ class ScrollingActivity : AppCompatActivity() {
      */
     private fun launchTest() {
         val sleepTime: Long = 6 * 1000
-        Log.d("ScrollingActivity", "before launch ${Thread.currentThread().name}")
+        log("before launch")
 
         GlobalScope.launch {
-            Log.d("ScrollingActivity", "start launch1 ${Thread.currentThread().name}")
+            log("start launch1")
             // Thread.sleep だと thread 自体を停止してしまうが、
             Thread.sleep(sleepTime)
-            Log.d("ScrollingActivity", "end   launch1 ${Thread.currentThread().name}")
+            log("end   launch1")
         }
 
         GlobalScope.launch {
-            Log.d("ScrollingActivity", "start launch2 ${Thread.currentThread().name}")
+            log("start launch2")
             // delay なら Thread を block するのではなく coroutine を中断するだけなので、
             // 他の coroutine で Thread が使い回される。
             delay(sleepTime)
-            Log.d("ScrollingActivity", "end   launch2 ${Thread.currentThread().name}")
+            log("end   launch2")
         }
 
         GlobalScope.launch {
-            Log.d("ScrollingActivity", "start launch3 ${Thread.currentThread().name}")
+            log("start launch3")
             Thread.sleep(sleepTime)
-            Log.d("ScrollingActivity", "end   launch3 ${Thread.currentThread().name}")
+            log("end   launch3")
         }
 
         GlobalScope.launch {
-            Log.d("ScrollingActivity", "start launch4 ${Thread.currentThread().name}")
+            log("start launch4")
             delay(sleepTime)
-            Log.d("ScrollingActivity", "end   launch4 ${Thread.currentThread().name}")
+            log("end   launch4")
         }
 
-        Log.d("ScrollingActivity", "after launch ${Thread.currentThread().name}")
+        log("after launch")
+    }
+
+    private fun log(message: String) {
+        Log.d("ScrollingActivity", "$message\tThread: ${Thread.currentThread().name}")
     }
 }
