@@ -7,11 +7,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_scrolling.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.content_scrolling.*
+import kotlinx.coroutines.*
 
 class ScrollingActivity : AppCompatActivity() {
+
+    private val sleepTime: Long = 6 * 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +24,7 @@ class ScrollingActivity : AppCompatActivity() {
         }
 
         launch.setOnClickListener { launchTest() }
+        asyncAwait.setOnClickListener { asyncAwaitTest() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -61,7 +63,6 @@ class ScrollingActivity : AppCompatActivity() {
      * ```
      */
     private fun launchTest() {
-        val sleepTime: Long = 6 * 1000
         log("before launch")
 
         GlobalScope.launch {
@@ -93,6 +94,43 @@ class ScrollingActivity : AppCompatActivity() {
 
         log("after launch")
     }
+
+    /**
+     * [async], [Deferred.await] の動作確認です。
+     *
+     * 以下のような結果になります。
+     * ```
+     * 2019-05-22 22:09:50.979 16312-16312 D/ScrollingActivity: start asyncAwaitTest	Thread: main
+     * 2019-05-22 22:09:50.985 16312-16374 D/ScrollingActivity: start asyncTask	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:09:57.018 16312-16376 D/ScrollingActivity: end asyncTask	Thread: DefaultDispatcher-worker-1
+     * 2019-05-22 22:09:57.025 16312-16312 D/ScrollingActivity: after asyncTask before GlobalScope.async	Thread: main
+     * 2019-05-22 22:09:57.039 16312-16375 D/ScrollingActivity: start GlobalScope.async	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:10:03.043 16312-16379 D/ScrollingActivity: end GlobalScope.async	Thread: DefaultDispatcher-worker-2
+     * 2019-05-22 22:10:03.044 16312-16312 D/ScrollingActivity: end asyncAwaitTest	Thread: main
+     * ```
+     */
+    private fun asyncAwaitTest() = GlobalScope.launch(Dispatchers.Main) {
+        log("start asyncAwaitTest")
+
+        asyncTask()
+
+        log("after asyncTask before GlobalScope.async")
+
+        GlobalScope.async(Dispatchers.IO) {
+            log("start GlobalScope.async")
+            delay(sleepTime)
+            log("end GlobalScope.async")
+            return@async 10
+        }.await()
+        log("end asyncAwaitTest")
+    }
+
+    private suspend fun asyncTask() = GlobalScope.async(Dispatchers.IO) {
+        log("start asyncTask")
+        delay(sleepTime)
+        log("end asyncTask")
+        return@async 10
+    }.await()
 
     private fun log(message: String) {
         Log.d("ScrollingActivity", "$message\tThread: ${Thread.currentThread().name}")
