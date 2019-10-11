@@ -26,6 +26,18 @@
                 android:layout_height="wrap_content"
                 android:text="async/await"/>
 
+        <Button
+                android:id="@+id/exceptionHandler1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exception Handler 1"/>
+
+        <Button
+                android:id="@+id/exceptionHandler2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exception Handler 2"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

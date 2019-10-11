@@ -15,6 +15,7 @@ class ScrollingActivity : AppCompatActivity() {
     private val sleepTime: Long = 6 * 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        log("start onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling)
         setSupportActionBar(toolbar)
@@ -25,6 +26,24 @@ class ScrollingActivity : AppCompatActivity() {
 
         launch.setOnClickListener { launchTest() }
         asyncAwait.setOnClickListener { asyncAwaitTest() }
+        exceptionHandler1.setOnClickListener { exceptionHandlerTest1() }
+        exceptionHandler2.setOnClickListener { exceptionHandlerTest2() }
+
+        // これはコンパイルエラー
+//        asyncAwait.setOnClickListener { asyncTask() }
+        // これもコンパイルエラー
+//        asyncTask()
+        // これは OK
+        // suspend を付けた関数内からしか呼び出せないため、
+        // suspend のついていない onCreate などは onCreate のタイミングで実行されることが保証される。
+        GlobalScope.launch(Dispatchers.Main) {
+            log("start launch")
+            val asyncTaskResult = asyncTask()
+            log("asyncTaskResult: $asyncTaskResult")
+            log("end   launch")
+        }
+
+        log("end   onCreate")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -132,7 +151,75 @@ class ScrollingActivity : AppCompatActivity() {
         return@async 10
     }.await()
 
+
+    private fun exceptionHandlerTest1() {
+        log("start exceptionHandlerTest1")
+
+        GlobalScope.launch(Dispatchers.Main + CoroutineExceptionHandler { _, e ->
+            log("handleCoroutineException $e")
+        }) {
+            log("start launch")
+            withContext(Dispatchers.Default) {
+                log("start async")
+                throw Exception("error")
+                log("end   async")
+            }
+            log("end   launch")
+        }
+
+        log("end   exceptionHandlerTest1")
+    }
+
+    private fun exceptionHandlerTest2() = GlobalScope.launch(Dispatchers.Main) {
+        log("start exceptionHandlerTest2")
+
+        // async に指定しても catch してくれない。 crash する。
+        val result = async(CoroutineExceptionHandler { _, e ->
+            log("handleCoroutineException $e")
+        }) {
+            log("start async")
+            throw Exception("error")
+            log("end   async")
+            return@async 11
+        }.await()
+
+        log("end   exceptionHandlerTest2 $result")
+    }
+
+    private fun exceptionHandlerTest3() = GlobalScope.launch(Dispatchers.Main + CoroutineExceptionHandler { _, e ->
+        log("handleCoroutineException $e")
+    }) {
+        log("start launch")
+        val result = async(CoroutineExceptionHandler { _, e ->
+            log("handleCoroutineException $e")
+        }) {
+            log("start async")
+            throw Exception("error")
+            log("end   async")
+            return@async 11
+        }.await()
+        log("end   launch result")
+    }
+
+    private fun exceptionHandlerTest4() = GlobalScope.launch(Dispatchers.Main + CoroutineExceptionHandler { _, e ->
+        log("handleCoroutineException $e")
+    }) {
+        log("start launch")
+        val result = async(CoroutineExceptionHandler { _, e ->
+            log("handleCoroutineException $e")
+        }) {
+            log("start async")
+            throw Exception("error")
+            log("end   async")
+            return@async 11
+        }.await()
+        log("end   launch result")
+    }
+
     private fun log(message: String) {
         Log.d("ScrollingActivity", "$message\tThread: ${Thread.currentThread().name}")
     }
+
+
+//    class
 }
